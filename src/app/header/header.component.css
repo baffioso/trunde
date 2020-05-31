@@ -1,0 +1,17 @@
+.header {
+  position: fixed;
+  width: 100%;
+  /* height: 56px; */
+  text-align: center;
+  z-index: 1;
+  animation: blinker 470ms linear infinite;
+  color: red;
+  font-family: 'Bangers', cursive;
+  font-size: x-large;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
