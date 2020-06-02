@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -25,7 +27,7 @@ export class MapComponent implements OnInit {
     this.map.on('load', () => {
       this.addBoatIcon([12.563738, 55.660052], 155);
 
-      this.flyTo([12.563738, 55.660052], 17);
+      this.flyTo([12.563738, 55.660052], 14);
     });
   }
 
@@ -35,18 +37,7 @@ export class MapComponent implements OnInit {
       type: 'symbol',
       source: {
         type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: coords,
-              },
-            },
-          ],
-        } as any,
+        data: this.toGeojsonPoint(coords) as any,
       },
       layout: {
         'icon-image': 'boat',
@@ -61,6 +52,21 @@ export class MapComponent implements OnInit {
       center,
       zoom,
     });
+  }
+
+  toGeojsonPoint(coords: [number, number]) {
+    return {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: coords,
+          },
+        },
+      ],
+    };
   }
 
   fetchLocations() {}
