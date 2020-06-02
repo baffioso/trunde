@@ -6,10 +6,14 @@ import * as mapboxgl from 'mapbox-gl';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit {
+  map: mapboxgl.Map;
+  currentPosistion: [number, number];
+  marker: mapboxgl.Marker;
+
   constructor() {}
 
   ngOnInit() {
-    let map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({
       accessToken:
         'pk.eyJ1IjoiYmFmZmlvc28iLCJhIjoiT1JTS1lIMCJ9.f5ubY91Bi42yPnTrgiq-Gw',
       container: 'map', // container id
@@ -18,13 +22,45 @@ export class MapComponent implements OnInit {
       zoom: 13, // starting zoom
     });
 
-    map.on('load', () => {
-      console.log('object');
+    this.map.on('load', () => {
+      this.addBoatIcon([12.563738, 55.660052], 155);
+
+      this.flyTo([12.563738, 55.660052], 17);
     });
   }
 
-  addMarker(points: [number, number], direction: number) {
-    return null;
+  addBoatIcon(coords: [number, number], direction: number) {
+    this.map.addLayer({
+      id: 'boat',
+      type: 'symbol',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: coords,
+              },
+            },
+          ],
+        } as any,
+      },
+      layout: {
+        'icon-image': 'boat',
+        'icon-size': 0.1,
+        'icon-rotate': direction,
+      },
+    });
+  }
+
+  flyTo(center: [number, number], zoom: number) {
+    this.map.flyTo({
+      center,
+      zoom,
+    });
   }
 
   fetchLocations() {}
