@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import { HttpClient } from '@angular/common/http';
+import { interval } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -9,12 +12,12 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MapComponent implements OnInit {
   map: mapboxgl.Map;
-  currentPosistion: [number, number];
-  marker: mapboxgl.Marker;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
+    this.fetchLocations();
+
     this.map = new mapboxgl.Map({
       accessToken:
         'pk.eyJ1IjoiYmFmZmlvc28iLCJhIjoiT1JTS1lIMCJ9.f5ubY91Bi42yPnTrgiq-Gw',
@@ -25,9 +28,30 @@ export class MapComponent implements OnInit {
     });
 
     this.map.on('load', () => {
-      this.addBoatIcon([12.563738, 55.660052], 155);
+      this.fetchLocations().subscribe((res: any) => {
+        const payload = res.locations[0].payload.payload;
+        const lastPosistion: [number, number] = [payload.lon, payload.lat];
+        this.addBoatIcon(lastPosistion, payload.direction);
+        this.flyTo(lastPosistion, 14);
+      });
 
-      this.flyTo([12.563738, 55.660052], 14);
+      interval(2 * 1000).subscribe(() => {
+        this.fetchLocations().subscribe((res: any) => {
+          const payload = res.locations[0].payload.payload;
+          const lastPosistion: [number, number] = [payload.lon, payload.lat];
+
+          // update data
+          this.map
+            .getSource('boat')
+            .setData(this.toGeojsonPoint(lastPosistion));
+
+          // change boat icon direction
+          this.map.setLayoutProperty('boat', 'icon-rotate', payload.direction);
+
+          // zoom to last position
+          this.flyTo(lastPosistion, 14);
+        });
+      });
     });
   }
 
@@ -37,7 +61,7 @@ export class MapComponent implements OnInit {
       type: 'symbol',
       source: {
         type: 'geojson',
-        data: this.toGeojsonPoint(coords) as any,
+        data: this.toGeojsonPoint(coords),
       },
       layout: {
         'icon-image': 'boat',
@@ -69,5 +93,7 @@ export class MapComponent implements OnInit {
     };
   }
 
-  fetchLocations() {}
+  fetchLocations() {
+    return this.http.get(environment.apiUrl + '/location');
+  }
 }
