@@ -41,9 +41,9 @@ export class MapComponent implements OnInit {
           const lastPosistion: [number, number] = [payload.lon, payload.lat];
 
           // update data
-          this.map
-            .getSource('boat')
-            .setData(this.toGeojsonPoint(lastPosistion));
+          (this.map.getSource('boat') as mapboxgl.GeoJSONSource).setData(
+            this.toGeojsonPoint(lastPosistion) as any
+          );
 
           // change boat icon direction
           this.map.setLayoutProperty('boat', 'icon-rotate', payload.direction);
@@ -61,7 +61,7 @@ export class MapComponent implements OnInit {
       type: 'symbol',
       source: {
         type: 'geojson',
-        data: this.toGeojsonPoint(coords),
+        data: this.toGeojsonPoint(coords) as any,
       },
       layout: {
         'icon-image': 'boat',
