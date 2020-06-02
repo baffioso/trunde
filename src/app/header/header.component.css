@@ -1,18 +1,18 @@
 .header {
   position: fixed;
   width: 100%;
-  /* height: 56px; */
   text-align: center;
+  letter-spacing: 2px;
   z-index: 1;
-  /* animation: blinker 470ms linear infinite; */
+  animation: blinker 470ms linear infinite;
   color: red;
   font-family: 'Bangers', cursive;
   font-size: x-large;
   -webkit-text-stroke: 0.5px white;
 }
 
-/* @keyframes blinker {
+@keyframes blinker {
   50% {
     opacity: 0;
   }
-} */
+}

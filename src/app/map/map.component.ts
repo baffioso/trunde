@@ -22,4 +22,10 @@ export class MapComponent implements OnInit {
       console.log('object');
     });
   }
+
+  addMarker(points: [number, number], direction: number) {
+    return null;
+  }
+
+  fetchLocations() {}
 }
