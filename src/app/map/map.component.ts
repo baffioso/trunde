@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import { HttpClient } from '@angular/common/http';
 import { interval } from 'rxjs';
@@ -10,13 +10,13 @@ import { environment } from 'src/environments/environment';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
   map: mapboxgl.Map;
   isLocated;
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.fetchLocations();
 
     this.map = new mapboxgl.Map({
