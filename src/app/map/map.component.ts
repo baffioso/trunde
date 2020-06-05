@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 })
 export class MapComponent implements OnInit {
   map: mapboxgl.Map;
+  isLocated;
 
   constructor(private http: HttpClient) {}
 
@@ -95,5 +96,21 @@ export class MapComponent implements OnInit {
 
   fetchLocations() {
     return this.http.get(environment.apiUrl + '/location');
+  }
+
+  updateLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const body = {
+          payload: {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            direction: pos.coords.heading ? pos.coords.heading : 0,
+          },
+        };
+
+        this.http.post(environment.apiUrl + '/location', body).subscribe();
+      });
+    }
   }
 }
