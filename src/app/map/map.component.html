@@ -2,3 +2,21 @@
 <div class="locate-me">
   <button (click)="updateLocation()"></button>
 </div>
+<div class="track-boat">
+  <button (click)="this.trackBoat = !this.trackBoat">
+    <mat-icon
+      *ngIf="this.trackBoat"
+      aria-hidden="false"
+      aria-label="Example home icon"
+    >
+      gps_fixed
+    </mat-icon>
+    <mat-icon
+      *ngIf="!this.trackBoat"
+      aria-hidden="false"
+      aria-label="Example home icon"
+    >
+      gps_off
+    </mat-icon>
+  </button>
+</div>

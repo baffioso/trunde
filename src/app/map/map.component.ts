@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 })
 export class MapComponent implements AfterViewInit {
   map: mapboxgl.Map;
-  isLocated;
+  trackBoat = false;
 
   constructor(private http: HttpClient) {}
 
@@ -52,7 +52,9 @@ export class MapComponent implements AfterViewInit {
           this.map.setLayoutProperty('boat', 'icon-rotate', payload.direction);
 
           // zoom to last position
-          this.flyTo(lastPosistion, 16);
+          if (this.trackBoat) {
+            this.flyTo(lastPosistion, 16);
+          }
         });
       });
     });
