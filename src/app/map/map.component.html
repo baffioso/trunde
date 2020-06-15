@@ -5,17 +5,13 @@
 <div class="track-boat">
   <button (click)="this.trackBoat = !this.trackBoat">
     <mat-icon
-      *ngIf="this.trackBoat"
+      *ngIf="!this.trackBoat"
       aria-hidden="false"
-      aria-label="Example home icon"
+      aria-label="gps fixed"
     >
       gps_fixed
     </mat-icon>
-    <mat-icon
-      *ngIf="!this.trackBoat"
-      aria-hidden="false"
-      aria-label="Example home icon"
-    >
+    <mat-icon *ngIf="this.trackBoat" aria-hidden="false" aria-label="gps off">
       gps_off
     </mat-icon>
   </button>

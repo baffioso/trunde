@@ -32,15 +32,15 @@ export class MapComponent implements AfterViewInit {
       // this.addDancingBuildings();
 
       this.fetchLocations().subscribe((res: any) => {
-        const payload = res.locations[0].payload;
+        const payload = res.locations[0];
         const lastPosistion: [number, number] = [payload.lon, payload.lat];
-        this.addBoatIcon(lastPosistion, payload.direction);
+        this.addBoatIcon(lastPosistion, payload.heading);
         this.flyTo(lastPosistion, 14);
       });
 
       interval(2 * 1000).subscribe(() => {
         this.fetchLocations().subscribe((res: any) => {
-          const payload = res.locations[0].payload;
+          const payload = res.locations[0];
           const lastPosistion: [number, number] = [payload.lon, payload.lat];
 
           // update data
@@ -49,7 +49,7 @@ export class MapComponent implements AfterViewInit {
           );
 
           // change boat icon direction
-          this.map.setLayoutProperty('boat', 'icon-rotate', payload.direction);
+          this.map.setLayoutProperty('boat', 'icon-rotate', payload.heading);
 
           // zoom to last position
           if (this.trackBoat) {
